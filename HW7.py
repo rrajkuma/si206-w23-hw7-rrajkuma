@@ -1,7 +1,7 @@
 
-# Your name:
-# Your student id:
-# Your email:
+# Your name: Rachel Rajkumar
+# Your student id: 7099 6834
+# Your email: rrajkuma@umich.edu
 # List who you have worked with on this project:
 
 import unittest
@@ -53,7 +53,19 @@ def make_positions_table(data, cur, conn):
 #     created for you -- see make_positions_table above for details.
 
 def make_players_table(data, cur, conn):
-    pass
+    players = []
+    for player in data["squad"]:
+        name = player["name"]
+        temp_date = player["dateOfBirth"]
+        date = int(temp_date[:4])
+        home = player["nationality"]
+        pos = player["position"]
+        pos_id = int(cur.execute("SELECT id FROM Positions WHERE position = " + pos))
+        players.append((name, pos_id, date, home))
+    cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT UNIQUE, position_id INTEGER, birthyear INTEGER, nationality TEXT)")
+    for i in range(len(players)):
+        cur.execute("INSERT OR IGNORE INTO Positions (id, name, position_id, birthyear, nationality) VALUES (?,?,?,?,?)",(i, players[i][0], players[i][1], players[i][2], players[i][3]))
+    conn.commit()
 
 ## [TASK 2]: 10 points
 # Finish the function nationality_search
