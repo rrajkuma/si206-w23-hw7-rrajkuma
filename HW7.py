@@ -105,7 +105,15 @@ def nationality_search(countries, cur, conn):
 
 
 def birthyear_nationality_search(age, country, cur, conn):
-    pass
+    age_limit = 2023 - age
+    tup_list = []
+    res = cur.execute("SELECT name, nationality, date FROM Players WHERE nationality = " + country + " AND date < " + str(age_limit))
+    for item in res:
+        name = item[0]
+        home = item[1]
+        year = item[2]
+        tup_list.append((name, home, year))
+    return tup_list
 
 ## [TASK 4]: 15 points
 # finish the function position_birth_search
@@ -223,7 +231,7 @@ class TestAllMethods(unittest.TestCase):
         c = sorted(position_birth_search("Defence", 23, self.cur, self.conn))
         self.assertEqual(len(c), 1)
         self.assertEqual(c, [('Teden Mengi', 'Defence', 2002)])
-    
+    '''
     # test extra credit
     def test_make_winners_table(self):
         self.cur2.execute('SELECT * from Winners')
@@ -241,7 +249,7 @@ class TestAllMethods(unittest.TestCase):
 
         pass
 
-
+    '''
 def main():
 
     #### FEEL FREE TO USE THIS SPACE TO TEST OUT YOUR FUNCTIONS
