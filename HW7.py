@@ -55,6 +55,7 @@ def make_positions_table(data, cur, conn):
 def make_players_table(data, cur, conn):
     players = []
     for player in data["squad"]:
+        id = player["id"]
         name = player["name"]
         temp_date = player["dateOfBirth"]
         date = int(temp_date[:4])
@@ -62,10 +63,10 @@ def make_players_table(data, cur, conn):
         pos = player["position"]
         pos_res = cur.execute("SELECT id FROM Positions WHERE position = " + pos)
         pos_id = int(pos_res[0])
-        players.append((name, pos_id, date, home))
+        players.append((id, name, pos_id, date, home))
     cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT UNIQUE, position_id INTEGER, birthyear INTEGER, nationality TEXT)")
     for i in range(len(players)):
-        cur.execute("INSERT OR IGNORE INTO Positions (id, name, position_id, birthyear, nationality) VALUES (?,?,?,?,?)",(i, players[i][0], players[i][1], players[i][2], players[i][3]))
+        cur.execute("INSERT OR IGNORE INTO Positions (id, name, position_id, birthyear, nationality) VALUES (?,?,?,?,?)",(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4]))
     conn.commit()
 
 ## [TASK 2]: 10 points
