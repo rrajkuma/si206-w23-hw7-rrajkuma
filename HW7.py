@@ -120,7 +120,7 @@ def nationality_search(countries, cur, conn):
 def birthyear_nationality_search(age, country, cur, conn):
     age_limit = 2023 - age
     tup_list = []
-    res = cur.execute("SELECT name, nationality, date FROM Players WHERE nationality = " + country + " AND date < " + str(age_limit))
+    res = cur.execute("SELECT name, nationality, birthyear FROM Players WHERE nationality = " + '"' + country + '"' + " AND birthyear < " + str(age_limit))
     for item in res:
         name = item[0]
         home = item[1]
@@ -148,7 +148,7 @@ def birthyear_nationality_search(age, country, cur, conn):
 def position_birth_search(position, age, cur, conn):
     age_limit = 2023 - age
     tup_list = []
-    res = cur.execute("SELECT Players.name, Players.date, Positions.position FROM Players JOIN Positions WHERE position = " + position + " AND date < " + str(age_limit))
+    res = cur.execute("SELECT Players.name, Players.birthyear, Positions.position FROM Players JOIN Positions WHERE position = " + position + " AND birthyear < " + str(age_limit))
     for item in res:
         name = item[0]
         pos = item[2]
@@ -232,7 +232,7 @@ class TestAllMethods(unittest.TestCase):
         self.assertEqual(len(y), 3)
         self.assertEqual(y[2],('Fred', 2, 'Brazil'))
         self.assertEqual(y[0][1], 3)
-'''
+
     def test_birthyear_nationality_search(self):
 
         a = birthyear_nationality_search(24, 'England', self.cur, self.conn)
@@ -240,7 +240,7 @@ class TestAllMethods(unittest.TestCase):
         self.assertEqual(a[0][1], 'England')
         self.assertEqual(a[3][2], 1992)
         self.assertEqual(len(a[1]), 3)
-
+'''
     def test_type_speed_defense_search(self):
         b = sorted(position_birth_search('Goalkeeper', 35, self.cur, self.conn))
         self.assertEqual(len(b), 2)
