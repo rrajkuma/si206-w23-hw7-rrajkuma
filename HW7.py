@@ -61,12 +61,14 @@ def make_players_table(data, cur, conn):
         date = int(temp_date[:4])
         home = player["nationality"]
         pos = player["position"]
-        pos_res = cur.execute("SELECT id FROM Positions WHERE position = " + pos)
-        pos_id = int(pos_res[0])
-        players.append((id, name, pos_id, date, home))
+        query = "SELECT id FROM Positions WHERE position = " + '"' + pos + '"' 
+        pos_res = cur.execute(query)
+        for row in pos_res:
+            pos_id = int(row[0])
+            players.append((id, name, pos_id, date, home))
     cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT UNIQUE, position_id INTEGER, birthyear INTEGER, nationality TEXT)")
     for i in range(len(players)):
-        cur.execute("INSERT OR IGNORE INTO Positions (id, name, position_id, birthyear, nationality) VALUES (?,?,?,?,?)",(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4]))
+        cur.execute("INSERT OR IGNORE INTO Players (id, name, position_id, birthyear, nationality) VALUES (?,?,?,?,?)",(players[i][0], players[i][1], players[i][2], players[i][3], players[i][4]))
     conn.commit()
 
 ## [TASK 2]: 10 points
