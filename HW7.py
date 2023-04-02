@@ -60,7 +60,8 @@ def make_players_table(data, cur, conn):
         date = int(temp_date[:4])
         home = player["nationality"]
         pos = player["position"]
-        pos_id = int(cur.execute("SELECT id FROM Positions WHERE position = " + pos))
+        pos_res = cur.execute("SELECT id FROM Positions WHERE position = " + pos)
+        pos_id = int(pos_res[0])
         players.append((name, pos_id, date, home))
     cur.execute("CREATE TABLE IF NOT EXISTS Players (id INTEGER PRIMARY KEY, name TEXT UNIQUE, position_id INTEGER, birthyear INTEGER, nationality TEXT)")
     for i in range(len(players)):
@@ -78,7 +79,14 @@ def make_players_table(data, cur, conn):
         # the player's name, their position_id, and their nationality.
 
 def nationality_search(countries, cur, conn):
-    pass
+    tup_list = []
+    res = cur.execute(f"SELECT name, position_id, nationality FROM Players WHERE nationality IN {format(countries)}")
+    for item in res:
+        name = item[0]
+        pos = item[1]
+        home = item[2]
+        tup_list.append((name, pos, home))
+    return tup_list
 
 ## [TASK 3]: 10 points
 # finish the function birthyear_nationality_search
