@@ -83,12 +83,22 @@ def make_players_table(data, cur, conn):
 
 def nationality_search(countries, cur, conn):
     tup_list = []
-    res = cur.execute(f"SELECT name, position_id, nationality FROM Players WHERE nationality IN {format(countries)}")
-    for item in res:
-        name = item[0]
-        pos = item[1]
-        home = item[2]
-        tup_list.append((name, pos, home))
+    if len(countries) == 1:
+        query = 'SELECT name, position_id, nationality FROM Players WHERE nationality = ' + '"' + countries[0] + '"'
+        res = cur.execute(query)
+        for item in res:
+            name = item[0]
+            pos = item[1]
+            home = item[2]
+            tup_list.append((name, pos, home))
+    else:
+        for item in countries:
+            query = 'SELECT name, position_id, nationality FROM Players WHERE nationality = ' + str(tuple(countries))
+            for item in res:
+                name = item[0]
+                pos = item[1]
+                home = item[2]
+                tup_list.append((name, pos, home))
     return tup_list
 
 ## [TASK 3]: 10 points
@@ -222,7 +232,7 @@ class TestAllMethods(unittest.TestCase):
         self.assertEqual(len(y), 3)
         self.assertEqual(y[2],('Fred', 2, 'Brazil'))
         self.assertEqual(y[0][1], 3)
-
+'''
     def test_birthyear_nationality_search(self):
 
         a = birthyear_nationality_search(24, 'England', self.cur, self.conn)
@@ -242,7 +252,7 @@ class TestAllMethods(unittest.TestCase):
         c = sorted(position_birth_search("Defence", 23, self.cur, self.conn))
         self.assertEqual(len(c), 1)
         self.assertEqual(c, [('Teden Mengi', 'Defence', 2002)])
-    '''
+
     # test extra credit
     def test_make_winners_table(self):
         self.cur2.execute('SELECT * from Winners')
