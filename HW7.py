@@ -148,7 +148,7 @@ def birthyear_nationality_search(age, country, cur, conn):
 def position_birth_search(position, age, cur, conn):
     age_limit = 2023 - age
     tup_list = []
-    res = cur.execute("SELECT Players.name, Players.birthyear, Positions.position FROM Players JOIN Positions WHERE position = " + position + " AND birthyear < " + str(age_limit))
+    res = cur.execute("SELECT Players.name, Players.birthyear, Positions.position FROM Players JOIN Positions WHERE position = " + '"' + position + '"' + " AND birthyear > " + str(age_limit))
     for item in res:
         name = item[0]
         pos = item[2]
@@ -240,7 +240,7 @@ class TestAllMethods(unittest.TestCase):
         self.assertEqual(a[0][1], 'England')
         self.assertEqual(a[3][2], 1992)
         self.assertEqual(len(a[1]), 3)
-'''
+
     def test_type_speed_defense_search(self):
         b = sorted(position_birth_search('Goalkeeper', 35, self.cur, self.conn))
         self.assertEqual(len(b), 2)
@@ -252,7 +252,7 @@ class TestAllMethods(unittest.TestCase):
         c = sorted(position_birth_search("Defence", 23, self.cur, self.conn))
         self.assertEqual(len(c), 1)
         self.assertEqual(c, [('Teden Mengi', 'Defence', 2002)])
-
+'''
     # test extra credit
     def test_make_winners_table(self):
         self.cur2.execute('SELECT * from Winners')
