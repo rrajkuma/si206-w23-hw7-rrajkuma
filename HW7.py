@@ -148,7 +148,7 @@ def birthyear_nationality_search(age, country, cur, conn):
 def position_birth_search(position, age, cur, conn):
     age_limit = 2023 - age
     tup_list = []
-    res = cur.execute("SELECT Players.name, Players.birthyear, Positions.position FROM Players JOIN Positions WHERE position = " + '"' + position + '"' + " AND birthyear > " + str(age_limit))
+    res = cur.execute("SELECT Players.name, Players.birthyear, Positions.position FROM Players JOIN Positions ON Players.position_id = Positions.id WHERE Positions.position = " + '"' + position + '"' + " AND Players.birthyear > " + str(age_limit))
     for item in res:
         name = item[0]
         pos = item[2]
